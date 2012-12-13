@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8"/>
+    <title>Server Side Piano</title>
+    <link type="text/css" rel="stylesheet" href="css/style.css"/>
+    <script type="text/javascript" src="http://code.angularjs.org/1.1.0/angular.js"></script>
+    <script type="text/javascript" src="http://code.angularjs.org/1.1.0/angular-resource.js"></script>
+    <script type="text/javascript" src="js/controllers.js"></script>
+
+</head>
+<body data-ng-app data-ng-controller="PianoController">
+
+	<div id="piano">
+		<div id="top">
+			<div id="logo">Server Side Piano</div>
+			<div id="box">
+				Keys
+				<select data-ng-model="startOctave" data-ng-change="resetKeyboard()">
+					<option value="0">A0</option>
+					<option value="1">A1</option>
+					<option value="2">A2</option>
+					<option value="3">A3</option>
+				</select>
+				-				
+				<select data-ng-model="endOctave" data-ng-change="resetKeyboard()">
+					<option value="5">C5</option>
+					<option value="6">C6</option>
+					<option value="7">C7</option>
+					<option value="8">C8</option>
+				</select>
+				<label for="showNames">Note names</label> <input id="showNames" type="checkbox" data-ng-model="showNames"/>
+			</div>
+		</div>
+
+		<div id="keyboard">
+			<div data-ng-repeat="key in keyboard | filter:color='white'"
+				 class="key white"
+				 data-ng-style="key.cssPosition"
+				 data-ng-click="sendMidiCommand(NOTE_ON, key.midiNote)">
+                <span data-ng-show="showNames" class="key-name">{{key.name}}</span>
+			</div>
+			<div data-ng-repeat="key in keyboard | filter:color='black'"
+				 class="key black"
+				 data-ng-style="key.cssPosition"
+				 data-ng-click="sendMidiCommand(NOTE_ON, key.midiNote)">
+				<span data-ng-show="showNames" class="key-name">{{key.name}}</span>
+			</div>
+		</div>
+	</div>
+
+    latency = {{latency}} ms
+
+</body>
+</html>
