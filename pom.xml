@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.addisonlee.app-config</groupId>
+    <groupId>com.github.addisonlee.appconfig</groupId>
     <artifactId>app-config-java-poller</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>

@@ -1,4 +1,4 @@
-package com.example.ng.piano;
+package com.github.addisonlee.appconfig;
 
 import javax.sound.midi.Instrument;
 import javax.sound.midi.InvalidMidiDataException;

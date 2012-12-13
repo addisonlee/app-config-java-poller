@@ -1,4 +1,4 @@
-package com.example.ng.piano;
+package com.github.addisonlee.appconfig;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
