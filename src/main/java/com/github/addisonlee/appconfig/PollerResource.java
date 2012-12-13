@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/midi")
-public class MidiService {
+public class PollerResource {
 	@POST
 	@Path("/send")
 	@Consumes("application/json")
 	@Produces("application/json")
 	public JsonMidiMessage send(JsonMidiMessage json) throws InvalidMidiDataException, MidiUnavailableException {
-		ShortMessage midi = new ShortMessage();
+        ShortMessage midi = new ShortMessage();
 		midi.setMessage(json.command, json.channel, json.note, json.velocity);
-        Application.getSynth().getReceiver().send(midi, -1);
+        PollerService.getSynth().getReceiver().send(midi, -1);
         return json;
 	}
 
@@ -26,7 +26,7 @@ public class MidiService {
     @Produces("application/json")
     public InstrumentData[] list() throws InvalidMidiDataException, MidiUnavailableException {
         List<InstrumentData> instrumentsList = new ArrayList<>();
-        for (Instrument instrument : Application.getSynth().getAvailableInstruments()) {
+        for (Instrument instrument : PollerService.getSynth().getAvailableInstruments()) {
             InstrumentData instrumentData = new InstrumentData();
             instrumentData.name = instrument.getName();
             instrumentsList.add(instrumentData);

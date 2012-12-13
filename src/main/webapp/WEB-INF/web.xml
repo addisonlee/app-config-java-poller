@@ -28,7 +28,7 @@
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>
 				org.codehaus.jackson.jaxrs;
-				com.example.ng.piano;
+                com.github.addisonlee.appconfig;
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>

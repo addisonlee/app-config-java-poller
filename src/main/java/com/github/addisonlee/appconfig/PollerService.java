@@ -31,8 +31,8 @@ import static java.util.logging.Level.*;
 import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
 
 @WebListener
-public class Application implements ServletContextListener {
-    private static Logger logger = Logger.getLogger(Application.class.getName());
+public class PollerService implements ServletContextListener {
+    private static Logger logger = Logger.getLogger(PollerService.class.getName());
 
 	private static Synthesizer synth;
 
