@@ -1,4 +1,4 @@
-function PianoController($scope, $http) {
+function PollerController($scope, $http) {
     $scope.md5Value = "";
 
     $scope.md5 = function () {
