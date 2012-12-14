@@ -1,47 +1,15 @@
 package com.github.addisonlee.appconfig;
 
-import javax.sound.midi.Instrument;
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.ShortMessage;
-import javax.ws.rs.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
-@Path("/midi")
+@Path("/poller")
 public class PollerResource {
-	@POST
-	@Path("/send")
-	@Consumes("application/json")
+	@GET
+	@Path("/md5")
 	@Produces("application/json")
-	public JsonMidiMessage send(JsonMidiMessage json) throws InvalidMidiDataException, MidiUnavailableException {
-        ShortMessage midi = new ShortMessage();
-		midi.setMessage(json.command, json.channel, json.note, json.velocity);
-        PollerService.getSynth().getReceiver().send(midi, -1);
-        return json;
+	public String md5() {
+        return "yo papa";
 	}
-
-    @GET
-    @Path("/list")
-    @Produces("application/json")
-    public InstrumentData[] list() throws InvalidMidiDataException, MidiUnavailableException {
-        List<InstrumentData> instrumentsList = new ArrayList<>();
-        for (Instrument instrument : PollerService.getSynth().getAvailableInstruments()) {
-            InstrumentData instrumentData = new InstrumentData();
-            instrumentData.name = instrument.getName();
-            instrumentsList.add(instrumentData);
-        }
-        return instrumentsList.toArray(new InstrumentData[instrumentsList.size()]);
-    }
-
-    public static class JsonMidiMessage {
-        public int command;
-        public int channel;
-        public int note;
-        public int velocity;
-    }
-
-    public static class InstrumentData {
-        public String name;
-    }
 }

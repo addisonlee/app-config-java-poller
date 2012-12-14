@@ -125,15 +125,15 @@ public class PollerService implements ServletContextListener {
         @Override
         public void run() {
             while (keepGoing) {
-                try {
-                    String newHash = getHash();
-                    if (newHash != null && !newHash.equals(hash)) {
-                        hash = newHash;
-                        updateConfiguration();
-                    }
-                } catch (IOException | MidiUnavailableException | InvalidMidiDataException exception) {
-                    logger.log(SEVERE, null, exception);
-                }
+//                try {
+//                    String newHash = getHash();
+//                    if (newHash != null && !newHash.equals(hash)) {
+//                        hash = newHash;
+//                        updateConfiguration();
+//                    }
+//                } catch (IOException | MidiUnavailableException | InvalidMidiDataException exception) {
+//                    logger.log(SEVERE, null, exception);
+//                }
                 try {
                     sleep(timeout);
                 } catch (InterruptedException exception) {
