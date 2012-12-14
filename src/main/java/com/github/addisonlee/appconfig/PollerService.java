@@ -11,43 +11,33 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.sound.midi.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import static java.lang.Thread.sleep;
 import static java.util.logging.Level.*;
-import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
 
 @WebListener
 public class PollerService implements ServletContextListener {
     private static Logger logger = Logger.getLogger(PollerService.class.getName());
 
-	private static Synthesizer synth;
-
-	public static Synthesizer getSynth() {
-		return synth;
-	}
-
-    private Configurator configurator;
+    private static Configurator configurator;
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		try {
-            initSynth();
             initConfigurator(event);
-		} catch (MidiUnavailableException | MalformedURLException exception) {
+		} catch (MalformedURLException exception) {
             logger.log(SEVERE, null, exception);
 		}
 	}
@@ -55,18 +45,8 @@ public class PollerService implements ServletContextListener {
     @Override
 	public void contextDestroyed(ServletContextEvent event) {
         configurator.stop();
-		synth.close();
         logger.log(INFO, "Elvis has left the building.");
 	}
-
-    private int getInstrument(String name) {
-        for (Instrument instrument : synth.getAvailableInstruments()) {
-            if (name != null && name.equals(instrument.getName())) {
-                return instrument.getPatch().getProgram();
-            }
-        }
-        return 0;
-    }
 
     private void initConfigurator(ServletContextEvent event) throws MalformedURLException {
         ServletContext context = event.getServletContext();
@@ -80,23 +60,8 @@ public class PollerService implements ServletContextListener {
         daemon.start();
     }
 
-    private void initSynth() throws MidiUnavailableException {
-        logger.log(INFO, "Preparing the synthesizer for funky music.");
-        synth = MidiSystem.getSynthesizer();
-        synth.open();
-    }
-
-    public static class Configuration {
-        private String instrument;
-
-        public String getInstrument() {
-            return instrument;
-        }
-
-        @Override
-        public String toString() {
-            return getClass().getSimpleName() + "{instrument='" + instrument + "'}";
-        }
+    public static String getHash() throws IOException {
+        return configurator.getHashStub();
     }
 
     private class Configurator implements Runnable {
@@ -159,20 +124,8 @@ public class PollerService implements ServletContextListener {
             }
         }
 
-        private void updateConfiguration() throws IOException, MidiUnavailableException, InvalidMidiDataException {
-            HttpResponse response = httpClient.execute(host, configGet, context);
-            int statusCode = response.getStatusLine().getStatusCode();
-            try (Reader reader = new InputStreamReader(response.getEntity().getContent())) {
-                if (statusCode == 200) {
-                    Configuration config = new ObjectMapper().readValue(reader, Configuration.class);
-                    ShortMessage message = new ShortMessage();
-                    message.setMessage(PROGRAM_CHANGE, 0, getInstrument(config.getInstrument()), 0);
-                    synth.getReceiver().send(message, 0);
-                    logger.log(INFO, "Updated configuration: " + config);
-                } else {
-                    logger.log(WARNING, "Could not obtain configuration: HTTP Status " + statusCode);
-                }
-            }
+        private String getHashStub() throws IOException {
+            return "rubbish hash " + new Date();
         }
     }
 }

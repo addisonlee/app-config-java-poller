@@ -3,7 +3,6 @@ function PianoController($scope, $http) {
 
     $scope.md5 = function () {
         $http.get("/data/poller/md5").success(function (data) {
-            alert(data);
             $scope.md5Value = data;
         });
     };
