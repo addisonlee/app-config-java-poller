@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import java.io.IOException;
 
 @Path("/poller")
-public class PollerResource {
+public class PollerClientResource {
 	@GET
 	@Path("/md5")
 	@Produces("application/json")
