@@ -3,7 +3,7 @@
 
     <context-param>
         <param-name>CONFIG_URL</param-name>
-        <param-value>http://localhost:9292/dev/instruments_configuration.json</param-value>
+        <param-value>http://localhost:9292/dev/instruments_configuration</param-value>
     </context-param>
 
     <context-param>

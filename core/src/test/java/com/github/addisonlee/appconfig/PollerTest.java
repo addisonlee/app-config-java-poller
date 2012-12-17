@@ -6,7 +6,9 @@ import org.junit.Test;
 import java.net.URL;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class PollerTest {
     private URL url;
@@ -18,14 +20,14 @@ public class PollerTest {
 
     @Before
     public void before() throws Exception {
-        url = new URL("http://acadomain:123/config.json");
+        url = new URL("http://acadomain:123/config");
         md5Url = new URL("http://acadomain:123/config.md5");
         poller = Poller.testPoller(url, "testuser", "testpassword", timeoutInMillis, listener, client);
     }
 
     @Test
     public void shouldTriggerCallbackTheFirstTime() throws Exception {
-        given(client.get(md5Url, "testuser", "testpassword"))
+        given(client.getFirstLine(md5Url, "testuser", "testpassword"))
                 .willReturn("firstMd5");
 
         whenThePollerRunsFor(poller, timeoutInMillis * 2);
@@ -35,7 +37,7 @@ public class PollerTest {
 
     @Test
     public void shouldNotTriggerCallbackIfTheMd5HasNotChanged() throws Exception {
-        given(client.get(md5Url, "testuser", "testpassword"))
+        given(client.getFirstLine(md5Url, "testuser", "testpassword"))
                 .willReturn("firstMd5")
                 .willReturn("firstMd5");
 
@@ -46,7 +48,7 @@ public class PollerTest {
 
     @Test
     public void shouldTriggerCallbackWhenTheMd5HasChanged() throws Exception {
-        given(client.get(md5Url, "testuser", "testpassword"))
+        given(client.getFirstLine(md5Url, "testuser", "testpassword"))
                 .willReturn("firstMd5")
                 .willReturn("differentMd5");
 
@@ -57,7 +59,7 @@ public class PollerTest {
 
     @Test
     public void shouldTriggerCallbackEveryTimeTheMd5HasChanged() throws Exception {
-        given(client.get(md5Url, "testuser", "testpassword"))
+        given(client.getFirstLine(md5Url, "testuser", "testpassword"))
                 .willReturn("firstMd5")
                 .willReturn("secondMd5")
                 .willReturn("secondMd5")

@@ -39,13 +39,14 @@ public class PollerServletLifeCycleListener implements ServletContextListener {
             new URL(context.getInitParameter("CONFIG_URL")),
             context.getInitParameter("CONFIG_USERNAME"),
             context.getInitParameter("CONFIG_PASSWORD"),
-            Integer.parseInt(context.getInitParameter("CONFIG_TIMEOUT")));
+            Integer.parseInt(context.getInitParameter("CONFIG_TIMEOUT")) * 1000,
+            new ACAListener());
         Thread daemon = new Thread(poller);
         daemon.setDaemon(true);
         daemon.start();
     }
 
     public static String getHash() throws IOException {
-        return poller.getHash();
+        return poller.getMd5();
     }
 }
