@@ -26,18 +26,9 @@ public class HttpClientFacade {
     private static Logger logger = Logger.getLogger(HttpClientFacade.class.getName());
 
     public String getFirstLine(URL url, String username, String password) throws IOException {
-        HttpHost host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        httpClient.getCredentialsProvider().setCredentials(new AuthScope(host.getHostName(), host.getPort()),
-                new UsernamePasswordCredentials(username, password));
-        AuthCache cache = new BasicAuthCache();
-        cache.put(host, new BasicScheme());
-        BasicHttpContext context = new BasicHttpContext();
-        context.setAttribute(ClientContext.AUTH_CACHE, cache);
-
         HttpResponse response;
         try {
-            response = httpClient.execute(host, new HttpGet(url.toString()), context);
+            response = getHttpResponse(url, username, password);
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -53,18 +44,9 @@ public class HttpClientFacade {
     }
 
     public String getAll(URL url, String username, String password) throws IOException {
-        HttpHost host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        httpClient.getCredentialsProvider().setCredentials(new AuthScope(host.getHostName(), host.getPort()),
-                new UsernamePasswordCredentials(username, password));
-        AuthCache cache = new BasicAuthCache();
-        cache.put(host, new BasicScheme());
-        BasicHttpContext context = new BasicHttpContext();
-        context.setAttribute(ClientContext.AUTH_CACHE, cache);
-
         HttpResponse response;
         try {
-            response = httpClient.execute(host, new HttpGet(url.toString()), context);
+            response = getHttpResponse(url, username, password);
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -75,14 +57,21 @@ public class HttpClientFacade {
             logger.log(WARNING, "Could not obtain configuration: HTTP Status " + statusCode);
             return null;
         }
-//        try (Reader reader = new InputStreamReader(response.getEntity().getContent())) {
-//            if (statusCode == 200) {
-//                Configuration config = new ObjectMapper().readValue(reader, Configuration.class);
-//                logger.log(INFO, "Updated configuration: " + config);
-//            } else {
-//                logger.log(WARNING, "Could not obtain configuration: HTTP Status " + statusCode);
-//            }
-//        }
+    }
+
+    private HttpResponse getHttpResponse(URL url, String username, String password) throws IOException {
+        HttpResponse response;
+        HttpHost host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        httpClient.getCredentialsProvider().setCredentials(new AuthScope(host.getHostName(), host.getPort()),
+                new UsernamePasswordCredentials(username, password));
+        AuthCache cache = new BasicAuthCache();
+        cache.put(host, new BasicScheme());
+        BasicHttpContext context = new BasicHttpContext();
+        context.setAttribute(ClientContext.AUTH_CACHE, cache);
+
+        response = httpClient.execute(host, new HttpGet(url.toString()), context);
+        return response;
     }
 
     private String pageContent(HttpResponse response) throws IOException {
