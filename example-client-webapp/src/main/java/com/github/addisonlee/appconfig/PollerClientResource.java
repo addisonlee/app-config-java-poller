@@ -11,6 +11,6 @@ public class PollerClientResource {
 	@Path("/md5")
 	@Produces("application/json")
 	public String md5() throws IOException {
-        return PollerService.getHash();
+        return PollerServletLifeCycleListener.getHash();
 	}
 }

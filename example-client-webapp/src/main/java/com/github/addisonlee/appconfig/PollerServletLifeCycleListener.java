@@ -13,8 +13,8 @@ import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
 @WebListener
-public class PollerService implements ServletContextListener {
-    private static Logger logger = Logger.getLogger(PollerService.class.getName());
+public class PollerServletLifeCycleListener implements ServletContextListener {
+    private static Logger logger = Logger.getLogger(PollerServletLifeCycleListener.class.getName());
 
     private static Poller poller;
 
