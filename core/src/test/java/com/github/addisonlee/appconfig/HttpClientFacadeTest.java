@@ -15,4 +15,10 @@ public class HttpClientFacadeTest {
         assertThat(client.getFirstLine(new URL("http://www.google.com"), "testUsername", "testPassword"),
                 containsString("<title>Google</title>"));
     }
+
+    @Test
+    public void shouldReturnPageContentOfUrl() throws Exception {
+        assertThat(client.getAll(new URL("http://www.google.com"), "testUsername", "testPassword"),
+                containsString("I'm Feeling Lucky"));
+    }
 }
