@@ -11,6 +11,7 @@ import java.net.URL;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PollerTest {
@@ -42,6 +43,7 @@ public class PollerTest {
         whenThePollerRunsFor(poller, timeoutInMillis * 2);
 
         verify(listener, times(1)).updateConfig("expected config content");
+        verifyNoMoreInteractions(listener);
     }
 
     @Test
@@ -55,6 +57,7 @@ public class PollerTest {
         whenThePollerRunsFor(poller, timeoutInMillis * 3);
 
         verify(listener, times(1)).updateConfig("expected config content");
+        verifyNoMoreInteractions(listener);
     }
 
     @Test
@@ -75,6 +78,7 @@ public class PollerTest {
         verify(listener, times(1)).updateConfig("first config content");
         verify(listener, times(1)).updateConfig("second config content");
         verify(listener, times(1)).updateConfig("third config content");
+        verifyNoMoreInteractions(listener);
     }
 
     private void whenThePollerRunsFor(Poller poller, int millis) throws InterruptedException {
