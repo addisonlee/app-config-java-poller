@@ -26,30 +26,19 @@ public class HttpClientFacade {
     private static Logger logger = Logger.getLogger(HttpClientFacade.class.getName());
 
     public String getFirstLine(URL url, String username, String password) throws IOException {
-        HttpResponse response;
-        try {
-            response = getHttpResponse(url, username, password);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        HttpResponse response = getHttpResponse(url, username, password);
         int statusCode = response.getStatusLine().getStatusCode();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
-            if (statusCode == 200) {
-                return reader.readLine();
-            } else {
-                logger.log(WARNING, "Could not obtain configuration hash: HTTP Status " + statusCode);
-                return null;
-            }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        if (statusCode == 200) {
+            return reader.readLine();
+        } else {
+            logger.log(WARNING, "Could not obtain configuration hash: HTTP Status " + statusCode);
+            return null;
         }
     }
 
     public String getAll(URL url, String username, String password) throws IOException {
-        HttpResponse response;
-        try {
-            response = getHttpResponse(url, username, password);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        HttpResponse response = getHttpResponse(url, username, password);
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode == 200) {
             return pageContent(response);
@@ -60,7 +49,6 @@ public class HttpClientFacade {
     }
 
     private HttpResponse getHttpResponse(URL url, String username, String password) throws IOException {
-        HttpResponse response;
         HttpHost host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
         DefaultHttpClient httpClient = new DefaultHttpClient();
         httpClient.getCredentialsProvider().setCredentials(new AuthScope(host.getHostName(), host.getPort()),
@@ -70,8 +58,7 @@ public class HttpClientFacade {
         BasicHttpContext context = new BasicHttpContext();
         context.setAttribute(ClientContext.AUTH_CACHE, cache);
 
-        response = httpClient.execute(host, new HttpGet(url.toString()), context);
-        return response;
+        return httpClient.execute(host, new HttpGet(url.toString()), context);
     }
 
     private String pageContent(HttpResponse response) throws IOException {

@@ -51,7 +51,11 @@ public class PollerServletLifeCycleListener implements ServletContextListener {
         daemon.start();
     }
 
-    public static String getHash() throws IOException {
-        return poller.getMd5();
+    public static String getHash() {
+        try {
+            return poller.getMd5();
+        } catch (IOException e) {
+            return e.getMessage();
+        }
     }
 }
