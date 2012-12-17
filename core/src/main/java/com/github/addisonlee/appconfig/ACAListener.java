@@ -1,7 +1,5 @@
 package com.github.addisonlee.appconfig;
 
-public class ACAListener {
-    public void updateConfig() {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
+public interface ACAListener {
+    void updateConfig(String config);
 }

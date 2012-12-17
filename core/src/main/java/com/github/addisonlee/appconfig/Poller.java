@@ -44,7 +44,7 @@ public class Poller implements Runnable {
                 System.out.println(newHash);
                 if (newHash != null && !newHash.equals(hash)) {
                     hash = newHash;
-                    listener.updateConfig();
+                    listener.updateConfig(getConfig());
                 }
             } catch (IOException e) {
                 logger.log(SEVERE, null, e);
@@ -64,5 +64,9 @@ public class Poller implements Runnable {
     @Deprecated // will be removed shortly
     public String getMd5() throws IOException {
         return client.getFirstLine(new URL(url.toString() + ".md5"), username, password);
+    }
+
+    private String getConfig() throws IOException {
+        return client.getAll(new URL(url.toString() + ".json"), username, password);
     }
 }
