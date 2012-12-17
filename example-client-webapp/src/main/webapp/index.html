@@ -12,9 +12,14 @@
 </head>
 <body data-ng-app data-ng-controller="PollerController">
 
-    <div id="push-the-button">
-        <button ng-click="md5()">get md5</button>
-        <p>md5: {{md5Value}}</p>
+    <div id="push-the-button-real">
+        <button ng-click="md5Real()">get md5 from live running ACA</button>
+        <p>md5: {{md5RealValue}}</p>
+    </div>
+
+    <div id="push-the-button-stub">
+        <button ng-click="md5Stub()">get md5 from stub</button>
+        <p>md5: {{md5StubValue}}</p>
     </div>
 
 </body>

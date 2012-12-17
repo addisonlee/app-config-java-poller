@@ -13,4 +13,11 @@ public class PollerResource {
 	public String md5() throws IOException {
         return PollerService.getHash();
 	}
+
+	@GET
+	@Path("/stub/md5")
+	@Produces("application/json")
+	public String stubMd5() throws IOException {
+        return PollerService.getStubHash();
+	}
 }

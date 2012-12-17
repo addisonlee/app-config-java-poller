@@ -61,7 +61,11 @@ public class PollerService implements ServletContextListener {
     }
 
     public static String getHash() throws IOException {
-        return configurator.getHashStub();
+        return configurator.getHash();
+    }
+
+    public static String getStubHash() throws IOException {
+        return "hash stub " + new Date();
     }
 
     private class Configurator implements Runnable {
@@ -112,7 +116,12 @@ public class PollerService implements ServletContextListener {
         }
 
         private String getHash() throws IOException {
-            HttpResponse response = httpClient.execute(host, hashGet, context);
+            HttpResponse response;
+            try {
+                response = httpClient.execute(host, hashGet, context);
+            } catch (Exception e) {
+                return e.getMessage();
+            }
             int statusCode = response.getStatusLine().getStatusCode();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
                 if (statusCode == 200) {
@@ -124,8 +133,5 @@ public class PollerService implements ServletContextListener {
             }
         }
 
-        private String getHashStub() throws IOException {
-            return "rubbish hash " + new Date();
-        }
     }
 }
