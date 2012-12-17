@@ -18,29 +18,34 @@ public class PollerServletLifeCycleListener implements ServletContextListener {
 
     private static Poller poller;
 
-	@Override
-	public void contextInitialized(ServletContextEvent event) {
-		try {
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+        try {
             initConfigurator(event);
-		} catch (MalformedURLException exception) {
+        } catch (MalformedURLException exception) {
             logger.log(SEVERE, null, exception);
-		}
-	}
+        }
+    }
 
     @Override
-	public void contextDestroyed(ServletContextEvent event) {
+    public void contextDestroyed(ServletContextEvent event) {
         poller.stop();
         logger.log(INFO, "Elvis has left the building.");
-	}
+    }
 
     private void initConfigurator(ServletContextEvent event) throws MalformedURLException {
         ServletContext context = event.getServletContext();
         poller = new Poller(
-            new URL(context.getInitParameter("CONFIG_URL")),
-            context.getInitParameter("CONFIG_USERNAME"),
-            context.getInitParameter("CONFIG_PASSWORD"),
-            Integer.parseInt(context.getInitParameter("CONFIG_TIMEOUT")) * 1000,
-            new ACAListener());
+                new URL(context.getInitParameter("CONFIG_URL")),
+                context.getInitParameter("CONFIG_USERNAME"),
+                context.getInitParameter("CONFIG_PASSWORD"),
+                Integer.parseInt(context.getInitParameter("CONFIG_TIMEOUT")) * 1000,
+                new ACAListener() {
+                    @Override
+                    public void updateConfig(String config) {
+                        throw new UnsupportedOperationException("not implemented yet");
+                    }
+                });
         Thread daemon = new Thread(poller);
         daemon.setDaemon(true);
         daemon.start();
