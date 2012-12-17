@@ -1,16 +1,9 @@
 function PollerController($scope, $http) {
-    $scope.md5RealValue = "";
-    $scope.md5StubValue = "";
+    $scope.md5Value = "";
 
-    $scope.md5Real = function () {
+    $scope.md5 = function () {
         $http.get("/data/poller/md5").success(function (data) {
-            $scope.md5RealValue = data;
-        });
-    };
-
-    $scope.md5Stub = function () {
-        $http.get("/data/poller/stub/md5").success(function (data) {
-            $scope.md5StubValue = data;
+            $scope.md5Value = data;
         });
     };
 }

@@ -7,7 +7,6 @@ import javax.servlet.annotation.WebListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.INFO;
@@ -49,9 +48,4 @@ public class PollerService implements ServletContextListener {
     public static String getHash() throws IOException {
         return poller.getHash();
     }
-
-    public static String getStubHash() throws IOException {
-        return "hash stub " + new Date();
-    }
-
 }
