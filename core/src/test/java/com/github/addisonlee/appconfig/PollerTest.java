@@ -2,27 +2,30 @@ package com.github.addisonlee.appconfig;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.net.URL;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PollerTest {
-    private URL url;
     private URL md5Url;
     private int timeoutInMillis = 10;
-    private ACAListener listener = mock(ACAListener.class);
-    private HttpClientFacade client = mock(HttpClientFacade.class);
+    @Mock private ACAListener listener;
+    @Mock private HttpClientFacade client;
+
     private Poller poller;
 
     @Before
     public void before() throws Exception {
-        url = new URL("http://acadomain:123/config");
-        md5Url = new URL("http://acadomain:123/config.md5");
-        poller = Poller.testPoller(url, "testuser", "testpassword", timeoutInMillis, listener, client);
+        String url = "http://acadomain:123/config";
+        md5Url = new URL(url + ".md5");
+        poller = Poller.testPoller(new URL(url), "testuser", "testpassword", timeoutInMillis, listener, client);
     }
 
     @Test
