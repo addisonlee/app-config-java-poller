@@ -58,21 +58,6 @@ public class PollerTest {
     }
 
     @Test
-    public void shouldTriggerCallbackWhenTheMd5HasChanged() throws Exception {
-        given(client.getFirstLine(md5Url, "testuser", "testpassword"))
-                .willReturn("firstMd5")
-                .willReturn("differentMd5");
-        given(client.getAll(configUrl, "testuser", "testpassword"))
-                .willReturn("first config content")
-                .willReturn("second config content");
-
-        whenThePollerRunsFor(poller, timeoutInMillis * 3);
-
-        verify(listener, times(1)).updateConfig("first config content");
-        verify(listener, times(1)).updateConfig("second config content");
-    }
-
-    @Test
     public void shouldTriggerCallbackEveryTimeTheMd5HasChanged() throws Exception {
         given(client.getFirstLine(md5Url, "testuser", "testpassword"))
                 .willReturn("firstMd5")
