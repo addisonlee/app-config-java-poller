@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class PollerTest {
     private URL md5Url;
     private URL configUrl;
-    private int timeoutInMillis = 10;
+    private int timeoutInMillis = 5;
     @Mock
     private ACAListener listener;
     @Mock
@@ -73,7 +73,7 @@ public class PollerTest {
                 .willReturn("second config content")
                 .willReturn("third config content");
 
-        whenThePollerRunsFor(poller, timeoutInMillis * 5);
+        whenThePollerRunsFor(poller, timeoutInMillis * 6);
 
         verify(listener, times(1)).updateConfig("first config content");
         verify(listener, times(1)).updateConfig("second config content");
