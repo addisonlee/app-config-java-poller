@@ -12,13 +12,13 @@ public class HttpClientFacadeTest {
 
     @Test
     public void shouldGetFirstLineOfPageContentOfUrl() throws Exception {
-        assertThat(client.getFirstLine(new URL("http://www.google.com"), "testUsername", "testPassword"),
+        assertThat(client.get(new URL("http://www.google.com"), "testUsername", "testPassword"),
                 containsString("<title>Google</title>"));
     }
 
     @Test
     public void shouldReturnPageContentOfUrl() throws Exception {
-        assertThat(client.getAll(new URL("http://www.google.com"), "testUsername", "testPassword"),
+        assertThat(client.get(new URL("http://www.google.com"), "testUsername", "testPassword"),
                 containsString("I'm Feeling Lucky"));
     }
 }

@@ -63,10 +63,10 @@ public class Poller implements Runnable {
 
     @Deprecated // will be removed shortly
     public String getMd5() throws IOException {
-        return client.getFirstLine(new URL(url.toString() + ".md5"), username, password);
+        return client.get(new URL(url.toString() + ".md5"), username, password);
     }
 
     private String getConfig() throws IOException {
-        return client.getAll(new URL(url.toString() + ".json"), username, password);
+        return client.get(new URL(url.toString() + ".json"), username, password);
     }
 }

@@ -35,9 +35,9 @@ public class PollerTest {
 
     @Test
     public void shouldTriggerCallbackTheFirstTime() throws Exception {
-        given(client.getFirstLine(md5Url, "testuser", "testpassword"))
+        given(client.get(md5Url, "testuser", "testpassword"))
                 .willReturn("firstMd5");
-        given(client.getAll(configUrl, "testuser", "testpassword"))
+        given(client.get(configUrl, "testuser", "testpassword"))
                 .willReturn("expected config content");
 
         whenThePollerRunsFor(poller, timeoutInMillis * 2);
@@ -48,10 +48,10 @@ public class PollerTest {
 
     @Test
     public void shouldNotTriggerCallbackIfTheMd5HasNotChanged() throws Exception {
-        given(client.getFirstLine(md5Url, "testuser", "testpassword"))
+        given(client.get(md5Url, "testuser", "testpassword"))
                 .willReturn("firstMd5")
                 .willReturn("firstMd5");
-        given(client.getAll(configUrl, "testuser", "testpassword"))
+        given(client.get(configUrl, "testuser", "testpassword"))
                 .willReturn("expected config content");
 
         whenThePollerRunsFor(poller, timeoutInMillis * 3);
@@ -62,13 +62,13 @@ public class PollerTest {
 
     @Test
     public void shouldTriggerCallbackEveryTimeTheMd5HasChanged() throws Exception {
-        given(client.getFirstLine(md5Url, "testuser", "testpassword"))
+        given(client.get(md5Url, "testuser", "testpassword"))
                 .willReturn("firstMd5")
                 .willReturn("secondMd5")
                 .willReturn("secondMd5")
                 .willReturn("thirdMd5")
                 .willReturn("thirdMd5");
-        given(client.getAll(configUrl, "testuser", "testpassword"))
+        given(client.get(configUrl, "testuser", "testpassword"))
                 .willReturn("first config content")
                 .willReturn("second config content")
                 .willReturn("third config content");

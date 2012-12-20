@@ -1,69 +1,33 @@
 package com.github.addisonlee.appconfig;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.WARNING;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 public class HttpClientFacade {
     private static Logger logger = Logger.getLogger(HttpClientFacade.class.getName());
+    Client client = Client.create();
 
-    public String getFirstLine(URL url, String username, String password) throws IOException {
-        HttpResponse response = getHttpResponse(url, username, password);
-        int statusCode = response.getStatusLine().getStatusCode();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        if (statusCode == 200) {
-            return reader.readLine();
+    public String get(URL url, String username, String password) throws IOException {
+        ClientResponse response = getResponse(url.toString(), username, password);
+        if (ClientResponse.Status.OK == response.getClientResponseStatus()) {
+            return response.getEntity(String.class);
         } else {
-            logger.log(WARNING, "Could not obtain configuration hash: HTTP Status " + statusCode);
+            logger.log(WARNING, "Could not obtain configuration hash: HTTP Status " + response.getClientResponseStatus());
             return null;
         }
     }
 
-    public String getAll(URL url, String username, String password) throws IOException {
-        HttpResponse response = getHttpResponse(url, username, password);
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode == 200) {
-            return pageContent(response);
-        } else {
-            logger.log(WARNING, "Could not obtain configuration: HTTP Status " + statusCode);
-            return null;
-        }
-    }
-
-    private HttpResponse getHttpResponse(URL url, String username, String password) throws IOException {
-        HttpHost host = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        httpClient.getCredentialsProvider().setCredentials(new AuthScope(host.getHostName(), host.getPort()),
-                new UsernamePasswordCredentials(username, password));
-        AuthCache cache = new BasicAuthCache();
-        cache.put(host, new BasicScheme());
-        BasicHttpContext context = new BasicHttpContext();
-        context.setAttribute(ClientContext.AUTH_CACHE, cache);
-
-        return httpClient.execute(host, new HttpGet(url.toString()), context);
-    }
-
-    private String pageContent(HttpResponse response) throws IOException {
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(response.getEntity().getContent(), writer);
-        return writer.toString();
+    private ClientResponse getResponse(String url, String username, String password) throws IOException {
+        client.removeAllFilters();
+        client.addFilter(new HTTPBasicAuthFilter(username, password));
+        return client.resource(url).accept(APPLICATION_JSON_TYPE).get(ClientResponse.class);
     }
 }
