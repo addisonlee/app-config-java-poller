@@ -26,23 +26,19 @@ public class MagicPiano {
         synth.getReceiver().send(midi, -1);
     }
 
-    public static Instrument[] getAvailableInstruments() {
-        return synth.getAvailableInstruments();
+    public static void changeInstrument(String instrumentName) throws InvalidMidiDataException, MidiUnavailableException {
+        ShortMessage message = new ShortMessage();
+        message.setMessage(PROGRAM_CHANGE, 0, getInstrumentProgram(instrumentName), 0);
+        synth.getReceiver().send(message, 0);
     }
 
-    public static int getInstrument(String name) {
-        for (Instrument instrument : getAvailableInstruments()) {
-            if (name != null && name.equals(instrument.getName())) {
+    private static int getInstrumentProgram(final String instrumentName) {
+        for (Instrument instrument : synth.getAvailableInstruments()) {
+            if (instrumentName != null && instrumentName.equals(instrument.getName())) {
                 return instrument.getPatch().getProgram();
             }
         }
         return 0;
-    }
-
-    public static void changeInstrument(String instrument) throws InvalidMidiDataException, MidiUnavailableException {
-        ShortMessage message = new ShortMessage();
-        message.setMessage(PROGRAM_CHANGE, 0, getInstrument(instrument), 0);
-        synth.getReceiver().send(message, 0);
     }
 
     public static void close() {
