@@ -13,6 +13,6 @@
 
     <modules>
         <module>core</module>
-        <module>example-client-webapp</module>
+        <module>example-piano-webapp</module>
     </modules>
 </project>

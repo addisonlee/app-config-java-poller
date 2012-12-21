@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.github.addisonlee.appconfig</groupId>
-    <artifactId>example-client-webapp</artifactId>
+    <artifactId>example-piano-webapp</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

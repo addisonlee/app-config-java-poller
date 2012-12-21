@@ -44,7 +44,7 @@
     border-left: 2px solid white;
     border-right: 2px solid white;
     background-color: black;
-    top:2px;
+    top: 2px;
     bottom: 60px;
     box-shadow: 5px 5px 5px #888;
 }
@@ -56,8 +56,8 @@
 .key.white {
     background-color: white;
     border: 2px solid #CCC;
-    top:0;
-    bottom:0;
+    top: 0;
+    bottom: 0;
 }
 
 .key.white:hover {
