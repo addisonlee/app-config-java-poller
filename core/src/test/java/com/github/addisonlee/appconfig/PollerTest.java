@@ -13,9 +13,15 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PollerTest {
-    private String md5Url;
-    private String configUrl;
-    private int timeoutInMillis = 5;
+    private final String url = "http://acadomain:123/config";
+    private final String md5Url = url + ".md5";
+    private final String configUrl = url + ".json";
+    private final int timeoutInMillis = 10;
+
+    // testing authentication makes more sense in an integration test
+    private final String notRelevantToTest1 = "testuser";
+    private final String notRelevantToTest2 = "testpassword";
+
     @Mock
     private ACAListener listener;
     @Mock
@@ -25,17 +31,14 @@ public class PollerTest {
 
     @Before
     public void before() throws Exception {
-        String url = "http://acadomain:123/config";
-        md5Url = url + ".md5";
-        configUrl = url + ".json";
-        poller = Poller.testPoller(url, "testuser", "testpassword", timeoutInMillis, listener, client);
+        poller = Poller.testPoller(url, notRelevantToTest1, notRelevantToTest2, timeoutInMillis, listener, client);
     }
 
     @Test
     public void shouldTriggerCallbackTheFirstTime() throws Exception {
-        given(client.get(md5Url, "testuser", "testpassword"))
+        given(client.get(md5Url, notRelevantToTest1, notRelevantToTest2))
                 .willReturn("firstMd5");
-        given(client.get(configUrl, "testuser", "testpassword"))
+        given(client.get(configUrl, notRelevantToTest1, notRelevantToTest2))
                 .willReturn("expected config content");
 
         whenThePollerRunsFor(poller, timeoutInMillis * 2);
@@ -46,10 +49,10 @@ public class PollerTest {
 
     @Test
     public void shouldNotTriggerCallbackIfTheMd5HasNotChanged() throws Exception {
-        given(client.get(md5Url, "testuser", "testpassword"))
+        given(client.get(md5Url, notRelevantToTest1, notRelevantToTest2))
                 .willReturn("firstMd5")
                 .willReturn("firstMd5");
-        given(client.get(configUrl, "testuser", "testpassword"))
+        given(client.get(configUrl, notRelevantToTest1, notRelevantToTest2))
                 .willReturn("expected config content");
 
         whenThePollerRunsFor(poller, timeoutInMillis * 3);
@@ -60,13 +63,13 @@ public class PollerTest {
 
     @Test
     public void shouldTriggerCallbackEveryTimeTheMd5HasChanged() throws Exception {
-        given(client.get(md5Url, "testuser", "testpassword"))
+        given(client.get(md5Url, notRelevantToTest1, notRelevantToTest2))
                 .willReturn("firstMd5")
                 .willReturn("secondMd5")
                 .willReturn("secondMd5")
                 .willReturn("thirdMd5")
                 .willReturn("thirdMd5");
-        given(client.get(configUrl, "testuser", "testpassword"))
+        given(client.get(configUrl, notRelevantToTest1, notRelevantToTest2))
                 .willReturn("first config content")
                 .willReturn("second config content")
                 .willReturn("third config content");
