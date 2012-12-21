@@ -9,12 +9,6 @@ public class HttpClientFacadeTest {
     private HttpClientFacade client = new HttpClientFacade();
 
     @Test
-    public void shouldGetFirstLineOfPageContentOfUrl() throws Exception {
-        assertThat(client.get("http://www.google.com", "testUsername", "testPassword"),
-                containsString("<title>Google</title>"));
-    }
-
-    @Test
     public void shouldReturnPageContentOfUrl() throws Exception {
         assertThat(client.get("http://www.google.com", "testUsername", "testPassword"),
                 containsString("I'm Feeling Lucky"));
