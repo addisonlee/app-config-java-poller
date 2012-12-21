@@ -17,12 +17,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.sound.midi.Instrument;
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Synthesizer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,24 +31,17 @@ import static java.lang.Thread.sleep;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
 
 @WebListener
 public class Application implements ServletContextListener {
     private static Logger logger = Logger.getLogger(Application.class.getName());
-
-    private static Synthesizer synth;
-
-    public static Synthesizer getSynth() {
-        return synth;
-    }
 
     private Configurator configurator;
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
         try {
-            initSynth();
+            MagicPiano.initSynth();
             initConfigurator(event);
         } catch (MidiUnavailableException | MalformedURLException exception) {
             logger.log(SEVERE, null, exception);
@@ -62,17 +51,8 @@ public class Application implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent event) {
         configurator.stop();
-        synth.close();
+        MagicPiano.close();
         logger.log(INFO, "Elvis has left the building.");
-    }
-
-    private int getInstrument(String name) {
-        for (Instrument instrument : synth.getAvailableInstruments()) {
-            if (name != null && name.equals(instrument.getName())) {
-                return instrument.getPatch().getProgram();
-            }
-        }
-        return 0;
     }
 
     private void initConfigurator(ServletContextEvent event) throws MalformedURLException {
@@ -85,12 +65,6 @@ public class Application implements ServletContextListener {
         Thread daemon = new Thread(configurator);
         daemon.setDaemon(true);
         daemon.start();
-    }
-
-    private void initSynth() throws MidiUnavailableException {
-        logger.log(INFO, "Preparing the synthesizer for funky music.");
-        synth = MidiSystem.getSynthesizer();
-        synth.open();
     }
 
     public static class Configuration {
@@ -172,9 +146,7 @@ public class Application implements ServletContextListener {
             try (Reader reader = new InputStreamReader(response.getEntity().getContent())) {
                 if (statusCode == 200) {
                     Configuration config = new ObjectMapper().readValue(reader, Configuration.class);
-                    ShortMessage message = new ShortMessage();
-                    message.setMessage(PROGRAM_CHANGE, 0, getInstrument(config.getInstrument()), 0);
-                    synth.getReceiver().send(message, 0);
+                    MagicPiano.changeInstrument(config);
                     logger.log(INFO, "Updated configuration: " + config);
                 } else {
                     logger.log(WARNING, "Could not obtain configuration: HTTP Status " + statusCode);

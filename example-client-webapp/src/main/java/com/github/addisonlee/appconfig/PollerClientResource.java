@@ -21,7 +21,7 @@ public class PollerClientResource {
     public JsonMidiMessage send(JsonMidiMessage json) throws InvalidMidiDataException, MidiUnavailableException {
         ShortMessage midi = new ShortMessage();
         midi.setMessage(json.command, json.channel, json.note, json.velocity);
-        Application.getSynth().getReceiver().send(midi, -1);
+        MagicPiano.play(midi);
         return json;
     }
 
@@ -30,7 +30,7 @@ public class PollerClientResource {
     @Produces("application/json")
     public InstrumentData[] list() throws InvalidMidiDataException, MidiUnavailableException {
         List<InstrumentData> instrumentsList = new ArrayList<>();
-        for (Instrument instrument : Application.getSynth().getAvailableInstruments()) {
+        for (Instrument instrument : MagicPiano.getAvailableInstruments()) {
             InstrumentData instrumentData = new InstrumentData();
             instrumentData.name = instrument.getName();
             instrumentsList.add(instrumentData);
