@@ -5,7 +5,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.sound.midi.MidiUnavailableException;
-import java.net.MalformedURLException;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.INFO;
@@ -22,7 +21,7 @@ public class PollerServletLifeCycleListener implements ServletContextListener {
         try {
             MagicPiano.initSynth();
             initPoller(event);
-        } catch (MalformedURLException | MidiUnavailableException exception) {
+        } catch (MidiUnavailableException exception) {
             logger.log(SEVERE, null, exception);
         }
     }
@@ -34,7 +33,7 @@ public class PollerServletLifeCycleListener implements ServletContextListener {
         logger.log(INFO, "Cheerio Leute");
     }
 
-    private void initPoller(ServletContextEvent event) throws MalformedURLException {
+    private void initPoller(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
         poller = new Poller(
                 context.getInitParameter("CONFIG_URL"),

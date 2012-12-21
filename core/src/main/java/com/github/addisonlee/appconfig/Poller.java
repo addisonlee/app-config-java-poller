@@ -21,7 +21,7 @@ public class Poller implements Runnable {
     private boolean keepGoing = true;
     private String hash = null;
 
-    public Poller(String url, String username, String password, int timeoutInMillis, ACAListener listener) throws MalformedURLException {
+    public Poller(String url, String username, String password, int timeoutInMillis, ACAListener listener) {
         this.timeoutInMillis = timeoutInMillis;
 
         this.url = url;
