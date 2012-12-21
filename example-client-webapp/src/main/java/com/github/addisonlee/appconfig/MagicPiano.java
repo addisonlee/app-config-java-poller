@@ -39,13 +39,13 @@ public class MagicPiano {
         return 0;
     }
 
-    public static void close() {
-        synth.close();
-    }
-
     public static void changeInstrument(String instrument) throws InvalidMidiDataException, MidiUnavailableException {
         ShortMessage message = new ShortMessage();
         message.setMessage(PROGRAM_CHANGE, 0, getInstrument(instrument), 0);
         synth.getReceiver().send(message, 0);
+    }
+
+    public static void close() {
+        synth.close();
     }
 }

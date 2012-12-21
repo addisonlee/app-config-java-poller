@@ -14,16 +14,7 @@ public class MagicPianoConfigACAListener implements ACAListener {
     private static Logger logger = Logger.getLogger(MagicPianoConfigACAListener.class.getName());
 
     public static class Configuration {
-        private String instrument;
-
-        public String getInstrument() {
-            return instrument;
-        }
-
-        @Override
-        public String toString() {
-            return getClass().getSimpleName() + "{instrument='" + instrument + "'}";
-        }
+        public String instrument;
     }
 
     @Override
@@ -35,7 +26,7 @@ public class MagicPianoConfigACAListener implements ACAListener {
             logger.log(INFO, "Error parsing Configuration from: " + configurationJson);
         }
         try {
-            MagicPiano.changeInstrument(configuration.getInstrument());
+            MagicPiano.changeInstrument(configuration.instrument);
         } catch (InvalidMidiDataException | MidiUnavailableException e) {
             logger.log(SEVERE, null, e);
         }

@@ -31,8 +31,7 @@ public class PollerClientResource {
     public InstrumentData[] list() throws InvalidMidiDataException, MidiUnavailableException {
         List<InstrumentData> instrumentsList = new ArrayList<>();
         for (Instrument instrument : MagicPiano.getAvailableInstruments()) {
-            InstrumentData instrumentData = new InstrumentData();
-            instrumentData.name = instrument.getName();
+            InstrumentData instrumentData = new InstrumentData(instrument.getName());
             instrumentsList.add(instrumentData);
         }
         return instrumentsList.toArray(new InstrumentData[instrumentsList.size()]);
@@ -47,5 +46,9 @@ public class PollerClientResource {
 
     public static class InstrumentData {
         public String name;
+
+        public InstrumentData(String name) {
+            this.name = name;
+        }
     }
 }

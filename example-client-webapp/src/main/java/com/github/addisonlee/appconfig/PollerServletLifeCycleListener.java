@@ -5,7 +5,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.sound.midi.MidiUnavailableException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.logging.Logger;
 
@@ -30,8 +29,8 @@ public class PollerServletLifeCycleListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        poller.stop();
         MagicPiano.close();
+        poller.stop();
         logger.log(INFO, "Cheerio Leute");
     }
 
@@ -46,13 +45,5 @@ public class PollerServletLifeCycleListener implements ServletContextListener {
         Thread daemon = new Thread(poller);
         daemon.setDaemon(true);
         daemon.start();
-    }
-
-    public static String getHash() {
-        try {
-            return poller.getMd5();
-        } catch (IOException e) {
-            return e.getMessage();
-        }
     }
 }
