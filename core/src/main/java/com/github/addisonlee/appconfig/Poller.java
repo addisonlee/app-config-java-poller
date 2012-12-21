@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.logging.Logger;
 
+import static java.lang.String.format;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
 public class Poller implements Runnable {
@@ -39,13 +41,8 @@ public class Poller implements Runnable {
     public void run() {
         while (keepGoing) {
             try {
-                String newHash = getMd5();
-                System.out.println(newHash);
-                if (newHash != null && !newHash.equals(hash)) {
-                    hash = newHash;
-                    listener.updateConfig(getConfig());
-                }
-            } catch (IOException e) {
+                processACAUpdates();
+            } catch (Exception e) {
                 logger.log(SEVERE, null, e);
             }
             try {
@@ -56,16 +53,17 @@ public class Poller implements Runnable {
         }
     }
 
+    private void processACAUpdates() throws IOException {
+        String newHash = client.get(url + ".md5", username, password);
+        if (!newHash.equals(hash)) {
+            String newConfig = client.get(url + ".json", username, password);
+            logger.log(INFO, format("Hash has changed from '%s' to '%s'.\nUpdating ACAListener with new config: '%s'", hash, newHash, newConfig));
+            hash = newHash;
+            listener.updateConfig(newConfig);
+        }
+    }
+
     public void stop() {
         keepGoing = false;
-    }
-
-    @Deprecated // will be removed shortly
-    public String getMd5() throws IOException {
-        return client.get(url + ".md5", username, password);
-    }
-
-    private String getConfig() throws IOException {
-        return client.get(url + ".json", username, password);
     }
 }
