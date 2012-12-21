@@ -23,7 +23,8 @@ import static org.hamcrest.Matchers.is;
  * My current thinking is to create a deploy/test script which:
  * 1. builds app-config-app and app-config-java-poller/core
  * 2. configures a perforce user
- * 3. runs this test
+ * 3. deploys app-config-app
+ * 4. runs this test
  *
  * In the meantime, this test simply serves as a convenient way to manually check that you didn't break anything, and
  * it is a stepping stone towards automated test coverage of the ACA suite of products.
