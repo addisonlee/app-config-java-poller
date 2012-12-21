@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.net.URL;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,8 +13,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PollerTest {
-    private URL md5Url;
-    private URL configUrl;
+    private String md5Url;
+    private String configUrl;
     private int timeoutInMillis = 5;
     @Mock
     private ACAListener listener;
@@ -28,9 +26,9 @@ public class PollerTest {
     @Before
     public void before() throws Exception {
         String url = "http://acadomain:123/config";
-        md5Url = new URL(url + ".md5");
-        configUrl = new URL(url + ".json");
-        poller = Poller.testPoller(new URL(url), "testuser", "testpassword", timeoutInMillis, listener, client);
+        md5Url = url + ".md5";
+        configUrl = url + ".json";
+        poller = Poller.testPoller(url, "testuser", "testpassword", timeoutInMillis, listener, client);
     }
 
     @Test

@@ -2,7 +2,6 @@ package com.github.addisonlee.appconfig;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.SEVERE;
@@ -12,7 +11,7 @@ public class Poller implements Runnable {
 
     private final long timeoutInMillis;
     private final ACAListener listener;
-    private final URL url;
+    private final String url;
     private final String username;
     private final String password;
 
@@ -20,7 +19,7 @@ public class Poller implements Runnable {
     private boolean keepGoing = true;
     private String hash = null;
 
-    public Poller(URL url, String username, String password, int timeoutInMillis, ACAListener listener) throws MalformedURLException {
+    public Poller(String url, String username, String password, int timeoutInMillis, ACAListener listener) throws MalformedURLException {
         this.timeoutInMillis = timeoutInMillis;
 
         this.url = url;
@@ -30,7 +29,7 @@ public class Poller implements Runnable {
         this.listener = listener;
     }
 
-    static Poller testPoller(URL url, String username, String password, int timeoutInMillis, ACAListener listener, HttpClientFacade client) throws MalformedURLException {
+    static Poller testPoller(String url, String username, String password, int timeoutInMillis, ACAListener listener, HttpClientFacade client) throws MalformedURLException {
         Poller poller = new Poller(url, username, password, timeoutInMillis, listener);
         poller.client = client;
         return poller;
@@ -63,10 +62,10 @@ public class Poller implements Runnable {
 
     @Deprecated // will be removed shortly
     public String getMd5() throws IOException {
-        return client.get(new URL(url.toString() + ".md5"), username, password);
+        return client.get(url + ".md5", username, password);
     }
 
     private String getConfig() throws IOException {
-        return client.get(new URL(url.toString() + ".json"), username, password);
+        return client.get(url + ".json", username, password);
     }
 }

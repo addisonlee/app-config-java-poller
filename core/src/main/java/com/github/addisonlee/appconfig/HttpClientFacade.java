@@ -5,7 +5,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.WARNING;
@@ -15,8 +14,8 @@ public class HttpClientFacade {
     private static Logger logger = Logger.getLogger(HttpClientFacade.class.getName());
     Client client = Client.create();
 
-    public String get(URL url, String username, String password) throws IOException {
-        ClientResponse response = getResponse(url.toString(), username, password);
+    public String get(String url, String username, String password) throws IOException {
+        ClientResponse response = getResponse(url, username, password);
         if (ClientResponse.Status.OK == response.getClientResponseStatus()) {
             return response.getEntity(String.class);
         } else {
