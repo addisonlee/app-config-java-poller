@@ -52,7 +52,6 @@ public class PollerACAIntegrationTest {
         assertConfig(clientConfiguration, "Applause");
 
         poller.stop();
-        assertThat(false, is(true));
     }
 
     private void setACAConfiguration(Client client, String instrumentName) {
