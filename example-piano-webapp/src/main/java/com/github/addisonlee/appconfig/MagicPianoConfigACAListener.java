@@ -2,9 +2,6 @@ package com.github.addisonlee.appconfig;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-import java.io.IOException;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.INFO;
@@ -19,17 +16,12 @@ public class MagicPianoConfigACAListener implements ACAListener {
 
     @Override
     public void updateConfig(String configurationJson) {
-        Configuration configuration = null;
         try {
-            configuration = new ObjectMapper().readValue(configurationJson, Configuration.class);
-        } catch (IOException e) {
-            logger.log(INFO, "Error parsing Configuration from: " + configurationJson);
-        }
-        try {
+            Configuration configuration = new ObjectMapper().readValue(configurationJson, Configuration.class);
             MagicPiano.changeInstrument(configuration.instrument);
-        } catch (InvalidMidiDataException | MidiUnavailableException e) {
-            logger.log(SEVERE, null, e);
+        } catch (Exception e) {
+            logger.log(SEVERE, "Error parsing Configuration from: " + configurationJson);
         }
-        logger.log(INFO, "Updated configuration: " + configurationJson);
+        logger.log(INFO, "Successfully updated configuration: " + configurationJson);
     }
 }
