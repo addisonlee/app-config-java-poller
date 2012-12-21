@@ -16,7 +16,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Will probably want to eventually move this to a separate module which starts up the ACA as part of the build.
+ * This test only runs within IntelliJ. I'm purposely omitting it from the command line mvn build because
+ * it requires a running ACA with the correct Perforce user set up. Currently the perforce user is hardcoded to "alee"
+ * on my machine, but the perforce user should be created as part of the test setup.
+ *
+ * My current thinking is to create a deploy/test script which:
+ * 1. builds app-config-app and app-config-java-poller/core
+ * 2. configures a perforce user
+ * 3. runs this test
+ *
+ * In the meantime, this test simply serves as a convenient way to manually check that you didn't break anything, and
+ * it is a stepping stone towards automated test coverage of the ACA suite of products.
  */
 public class PollerACAIntegrationTest {
     private final String url = "http://localhost:9292/dev/instruments_configuration";
@@ -42,6 +52,7 @@ public class PollerACAIntegrationTest {
         assertConfig(clientConfiguration, "Applause");
 
         poller.stop();
+        assertThat(false, is(true));
     }
 
     private void setACAConfiguration(Client client, String instrumentName) {
