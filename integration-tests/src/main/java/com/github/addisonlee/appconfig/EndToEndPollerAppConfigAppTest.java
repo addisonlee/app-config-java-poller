@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.is;
  * In the meantime, this test simply serves as a convenient way to manually check that you didn't break anything, and
  * it is a stepping stone towards automated test coverage of the ACA suite of products.
  */
-public class PollerACAIntegrationTest {
+public class EndToEndPollerAppConfigAppTest {
     private final String url = "http://localhost:9292/dev/instruments_configuration";
     private final String username = "alee";
     private final String password = "alee";
@@ -46,8 +46,10 @@ public class PollerACAIntegrationTest {
 
         setACAConfiguration(client, "Tuba");
         startPoller(poller);
+        // Would be better to poll than sleep, but I don't feel like making a poller for the poller at this point :)
         Thread.sleep(pollerTimeoutInMillis * 10);
         assertConfig(clientConfiguration, "Tuba");
+
         setACAConfiguration(client, "Applause");
         Thread.sleep(pollerTimeoutInMillis * 10);
         assertConfig(clientConfiguration, "Applause");

@@ -10,6 +10,10 @@ import java.util.logging.Logger;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
+/**
+ * This is one possible way of managing the life cycle of the app-config-app java poller.
+ * For more information, see http://ekawas.blogspot.com/2006/10/scheduling-ongoing-task-in-servlet.html
+ */
 @WebListener
 public class PollerServletLifeCycleListener implements ServletContextListener {
     private static Logger logger = Logger.getLogger(PollerServletLifeCycleListener.class.getName());

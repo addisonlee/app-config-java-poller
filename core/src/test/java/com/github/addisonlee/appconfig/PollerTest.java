@@ -86,6 +86,7 @@ public class PollerTest {
         Thread daemon = new Thread(poller);
         daemon.setDaemon(true);
         daemon.start();
+        // Would be better to poll than sleep, but I don't feel like making a poller for the poller at this point :)
         Thread.sleep(millis);
         poller.stop();
     }
