@@ -24,3 +24,4 @@ $ mvn jetty:run
 
 Then open <http://localhost:8080/> to start playing with the piano. Make instrument changes in the app-config-app
 and observe that the piano switches to the new instrument.
+
